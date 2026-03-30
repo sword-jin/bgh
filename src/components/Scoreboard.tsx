@@ -1,6 +1,6 @@
 import { useRef, useLayoutEffect } from 'react'
 import type { GameState } from '../types/game'
-import { getTotalScore, isGameOver } from '../types/game'
+import { getTotalScore, isGameOver, WIN_THRESHOLD } from '../types/game'
 
 interface Props {
   gameState: GameState
@@ -11,29 +11,9 @@ interface Props {
   onNewGame: () => void
 }
 
-function getRankLabel(rank: number): string {
-  if (rank === 1) return '1st'
-  if (rank === 2) return '2nd'
-  if (rank === 3) return '3rd'
-  return `${rank}th`
-}
-
 export default function Scoreboard({ gameState, rankings, topScore, onNewRound, onEditRound, onNewGame }: Props) {
   const { players, rounds } = gameState
   const gameOver = isGameOver(gameState)
-
-  // Build rank map (handle ties)
-  const rankMap = new Map<number, number>()
-  let currentRank = 1
-  rankings.forEach((playerIdx, i) => {
-    if (i > 0) {
-      const prevIdx = rankings[i - 1]
-      if (getTotalScore(gameState, playerIdx) < getTotalScore(gameState, prevIdx)) {
-        currentRank = i + 1
-      }
-    }
-    rankMap.set(playerIdx, currentRank)
-  })
 
   const winner = gameOver ? players[rankings[0]] : null
   const runnerUp = gameOver && rankings.length > 1 ? players[rankings[1]] : null
@@ -94,7 +74,7 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
         {rankings.map(playerIdx => {
           const player = players[playerIdx]
           const total = getTotalScore(gameState, playerIdx)
-          const rank = rankMap.get(playerIdx)!
+          const progress = Math.min(total / WIN_THRESHOLD, 1)
 
           return (
             <div
@@ -103,47 +83,44 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
                 if (el) cardRefs.current.set(player.id, el)
                 else cardRefs.current.delete(player.id)
               }}
-              className="bg-surface rounded-2xl px-4 py-3 flex items-center gap-3"
+              className="bg-surface rounded-2xl overflow-hidden"
             >
-              {/* Rank */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                rank === 1 ? 'bg-amber-500/20 text-amber-400' :
-                rank === 2 ? 'bg-slate-400/20 text-slate-300' :
-                rank === 3 ? 'bg-orange-600/20 text-orange-400' :
-                'bg-btn text-fg-dim'
-              }`}>
-                {getRankLabel(rank)}
-              </div>
-
-              {/* Player Info */}
-              <div
-                className="w-3 h-8 rounded-full shrink-0"
-                style={{ backgroundColor: player.color }}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-fg font-medium truncate">{player.name}</div>
-                {rounds.length > 0 && (
-                  <div className="flex gap-1.5 mt-1 overflow-x-auto no-scrollbar">
-                    {rounds.map((round, ri) => (
-                      <span
-                        key={ri}
-                        className="text-xs text-fg-dim bg-chip rounded px-1.5 py-0.5 shrink-0"
-                      >
-                        {round[playerIdx] ?? 0}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Total */}
-              <div className="text-right shrink-0">
-                <div className={`text-2xl font-bold tabular-nums ${
-                  rank === 1 && total > 0 ? 'text-amber-400' : 'text-fg'
-                }`}>
-                  {total}
+              <div className="px-4 py-3 flex items-center gap-3">
+                {/* Player Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-fg font-medium truncate">{player.name}</div>
+                  {rounds.length > 0 && (
+                    <div className="flex gap-1.5 mt-1 overflow-x-auto no-scrollbar">
+                      {rounds.map((round, ri) => (
+                        <span
+                          key={ri}
+                          className="text-xs text-fg-dim bg-chip rounded px-1.5 py-0.5 shrink-0"
+                        >
+                          {round[playerIdx] ?? 0}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="text-xs text-fg-dim">pts</div>
+
+                {/* Total */}
+                <div className="text-right shrink-0">
+                  <div className="text-2xl font-bold tabular-nums text-fg">
+                    {total}
+                  </div>
+                  <div className="text-xs text-fg-dim">pts</div>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="h-1 bg-chip">
+                <div
+                  className="h-full rounded-r-full transition-all duration-500 ease-out"
+                  style={{
+                    width: `${progress * 100}%`,
+                    backgroundColor: player.color,
+                  }}
+                />
               </div>
             </div>
           )
