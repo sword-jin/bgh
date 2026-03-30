@@ -1,3 +1,4 @@
+import { useRef, useLayoutEffect } from 'react'
 import type { GameState } from '../types/game'
 import { getTotalScore, isGameOver } from '../types/game'
 
@@ -37,6 +38,39 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
   const winner = gameOver ? players[rankings[0]] : null
   const runnerUp = gameOver && rankings.length > 1 ? players[rankings[1]] : null
 
+  // FLIP animation for reordering
+  const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+  const prevPositions = useRef<Map<number, number>>(new Map())
+
+  // Capture positions before DOM update
+  const capturePositions = () => {
+    cardRefs.current.forEach((el, id) => {
+      prevPositions.current.set(id, el.getBoundingClientRect().top)
+    })
+  }
+
+  // Store current positions before each render
+  capturePositions()
+
+  // After render, animate from old position to new
+  useLayoutEffect(() => {
+    cardRefs.current.forEach((el, id) => {
+      const prevTop = prevPositions.current.get(id)
+      if (prevTop === undefined) return
+      const currentTop = el.getBoundingClientRect().top
+      const delta = prevTop - currentTop
+      if (delta === 0) return
+
+      el.style.transform = `translateY(${delta}px)`
+      el.style.transition = 'none'
+
+      requestAnimationFrame(() => {
+        el.style.transition = 'transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1)'
+        el.style.transform = ''
+      })
+    })
+  }, [rankings.join(',')])
+
   return (
     <div className="flex-1 flex flex-col">
       {/* Winner Banner */}
@@ -65,6 +99,10 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
           return (
             <div
               key={player.id}
+              ref={el => {
+                if (el) cardRefs.current.set(player.id, el)
+                else cardRefs.current.delete(player.id)
+              }}
               className="bg-surface rounded-2xl px-4 py-3 flex items-center gap-3"
             >
               {/* Rank */}

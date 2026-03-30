@@ -53,9 +53,8 @@ export default function Flip7Game() {
   }, [])
 
   const confirmNewGame = useCallback(() => {
-    setScreen('setup')
-    setGameState({ players: [], rounds: [] })
-    setShowScoreInput(false)
+    setGameState(prev => ({ ...prev, rounds: [] }))
+    setShowScoreInput(true)
     setEditingRound(null)
     setShowConfirmReset(false)
   }, [])
