@@ -8,8 +8,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#0f172a" />
     <title>Board Game Helper</title>
+    <script>
+      if (localStorage.getItem('theme') !== 'light') document.documentElement.classList.add('dark')
+    </script>
   </head>
-  <body class="bg-slate-900 text-white">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

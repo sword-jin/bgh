@@ -78,12 +78,12 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
         <div className="mx-4 mt-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 p-5 text-center">
           <div className="text-4xl mb-2">🏆</div>
           <div className="text-xs uppercase tracking-wider text-amber-400/70 font-medium mb-1">Winner</div>
-          <div className="text-2xl font-bold text-white mb-0.5">{winner.name}</div>
+          <div className="text-2xl font-bold text-fg mb-0.5">{winner.name}</div>
           <div className="text-amber-400 font-semibold text-lg">{getTotalScore(gameState, rankings[0])} pts</div>
           {runnerUp && (
-            <div className="mt-3 pt-3 border-t border-amber-500/20 text-sm text-slate-400">
-              Runner-up: <span className="text-white font-medium">{runnerUp.name}</span>
-              <span className="text-slate-500 ml-1">({getTotalScore(gameState, rankings[1])} pts)</span>
+            <div className="mt-3 pt-3 border-t border-amber-500/20 text-sm text-fg-muted">
+              Runner-up: <span className="text-fg font-medium">{runnerUp.name}</span>
+              <span className="text-fg-dim ml-1">({getTotalScore(gameState, rankings[1])} pts)</span>
             </div>
           )}
         </div>
@@ -110,7 +110,7 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
                 rank === 1 ? 'bg-amber-500/20 text-amber-400' :
                 rank === 2 ? 'bg-slate-400/20 text-slate-300' :
                 rank === 3 ? 'bg-orange-600/20 text-orange-400' :
-                'bg-slate-700 text-slate-500'
+                'bg-btn text-fg-dim'
               }`}>
                 {getRankLabel(rank)}
               </div>
@@ -121,13 +121,13 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
                 style={{ backgroundColor: player.color }}
               />
               <div className="flex-1 min-w-0">
-                <div className="text-white font-medium truncate">{player.name}</div>
+                <div className="text-fg font-medium truncate">{player.name}</div>
                 {rounds.length > 0 && (
                   <div className="flex gap-1.5 mt-1 overflow-x-auto no-scrollbar">
                     {rounds.map((round, ri) => (
                       <span
                         key={ri}
-                        className="text-xs text-slate-500 bg-slate-800 rounded px-1.5 py-0.5 shrink-0"
+                        className="text-xs text-fg-dim bg-chip rounded px-1.5 py-0.5 shrink-0"
                       >
                         {round[playerIdx] ?? 0}
                       </span>
@@ -139,11 +139,11 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
               {/* Total */}
               <div className="text-right shrink-0">
                 <div className={`text-2xl font-bold tabular-nums ${
-                  rank === 1 && total > 0 ? 'text-amber-400' : 'text-white'
+                  rank === 1 && total > 0 ? 'text-amber-400' : 'text-fg'
                 }`}>
                   {total}
                 </div>
-                <div className="text-xs text-slate-500">pts</div>
+                <div className="text-xs text-fg-dim">pts</div>
               </div>
             </div>
           )
@@ -153,13 +153,13 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
       {/* Round History */}
       {rounds.length > 0 && (
         <div className="px-4 pb-2">
-          <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Rounds</h3>
+          <h3 className="text-xs font-medium text-fg-dim uppercase tracking-wider mb-2">Rounds</h3>
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
             {rounds.map((_, ri) => (
               <button
                 key={ri}
                 onClick={() => onEditRound(ri)}
-                className="shrink-0 px-3 py-1.5 rounded-lg bg-slate-800 text-sm text-slate-400 active:bg-slate-700 transition-colors"
+                className="shrink-0 px-3 py-1.5 rounded-lg bg-chip text-sm text-fg-muted active:bg-btn-active transition-colors"
               >
                 R{ri + 1}
               </button>
@@ -169,13 +169,13 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
       )}
 
       {/* Bottom Bar */}
-      <div className="sticky bottom-0 px-4 py-4 bg-slate-900/90 backdrop-blur-sm border-t border-slate-800">
+      <div className="sticky bottom-0 px-4 py-4 bg-bar backdrop-blur-sm border-t border-border">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-fg-muted">
             {rounds.length} round{rounds.length !== 1 ? 's' : ''} played
           </span>
           {topScore > 0 && (
-            <span className="text-sm text-slate-500 ml-auto">
+            <span className="text-sm text-fg-dim ml-auto">
               {gameOver ? 'Game Over' : `Top: ${topScore} pts`}
             </span>
           )}

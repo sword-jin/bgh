@@ -50,28 +50,28 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col justify-end bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex flex-col justify-end bg-overlay backdrop-blur-sm">
       {/* Backdrop tap to close */}
       <div className="flex-1" onClick={onClose} />
 
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className="bg-slate-900 rounded-t-3xl max-h-[85dvh] flex flex-col border-t border-slate-700"
+        className="bg-page rounded-t-3xl max-h-[85dvh] flex flex-col border-t border-border"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
         {/* Handle */}
         <div className="flex justify-center py-3">
-          <div className="w-10 h-1 rounded-full bg-slate-600" />
+          <div className="w-10 h-1 rounded-full bg-handle" />
         </div>
 
         {/* Title */}
         <div className="px-5 pb-3">
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-xl font-semibold text-fg">
             {initialScores ? `Edit Round ${roundNumber}` : `Round ${roundNumber}`}
           </h2>
-          <p className="text-sm text-slate-400 mt-0.5">Enter each player's points</p>
+          <p className="text-sm text-fg-muted mt-0.5">Enter each player's points</p>
         </div>
 
         {/* Player Inputs */}
@@ -82,7 +82,7 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
                 className="w-8 h-8 rounded-full shrink-0"
                 style={{ backgroundColor: player.color }}
               />
-              <span className="flex-1 text-white font-medium truncate">{player.name}</span>
+              <span className="flex-1 text-fg font-medium truncate">{player.name}</span>
               <input
                 type="number"
                 inputMode="numeric"
@@ -90,14 +90,14 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
                 placeholder="0"
                 onChange={e => handleScoreChange(i, e.target.value)}
                 onFocus={e => e.target.select()}
-                className="w-20 text-right bg-slate-800 text-white text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 tabular-nums placeholder-slate-600"
+                className="w-20 text-right bg-input text-fg text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 tabular-nums placeholder-fg-dim"
               />
             </div>
           ))}
         </div>
 
         {/* Submit */}
-        <div className="px-5 py-4 border-t border-slate-800" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+        <div className="px-5 py-4 border-t border-border" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
           <button
             onClick={handleSubmit}
             className="w-full py-4 rounded-2xl bg-blue-500 text-white font-semibold text-lg active:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"

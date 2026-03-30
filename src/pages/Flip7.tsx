@@ -63,19 +63,19 @@ export default function Flip7Game() {
   const topScore = gameState.players.length > 0 ? getTotalScore(gameState, rankings[0]) : 0
 
   return (
-    <div className="min-h-dvh bg-slate-900 flex flex-col">
+    <div className="min-h-dvh bg-page flex flex-col">
       {/* Header */}
-      <header className="flex items-center gap-3 px-4 py-3 bg-surface-dark/80 backdrop-blur-sm sticky top-0 z-30 border-b border-slate-800">
-        <a href="#/" className="text-slate-400 p-1 -ml-1 active:text-white transition-colors">
+      <header className="flex items-center gap-3 px-4 py-3 bg-header backdrop-blur-sm sticky top-0 z-30 border-b border-border">
+        <a href="#/" className="text-fg-muted p-1 -ml-1 active:text-fg transition-colors">
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </a>
-        <h1 className="text-lg font-semibold">Flip 7</h1>
+        <h1 className="text-lg font-semibold text-fg">Flip 7</h1>
         {screen === 'game' && (
           <button
             onClick={handleNewGame}
-            className="ml-auto text-sm text-slate-400 active:text-white px-3 py-1.5 rounded-lg bg-slate-800 transition-colors"
+            className="ml-auto text-sm text-fg-muted active:text-fg px-3 py-1.5 rounded-lg bg-btn transition-colors"
           >
             New Game
           </button>
@@ -109,14 +109,14 @@ export default function Flip7Game() {
 
       {/* Confirm New Game Dialog */}
       {showConfirmReset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-sm px-6">
           <div className="bg-surface rounded-2xl p-6 w-full max-w-xs text-center">
-            <h3 className="text-lg font-semibold text-white mb-2">New Game?</h3>
-            <p className="text-sm text-slate-400 mb-6">Current game progress will be lost.</p>
+            <h3 className="text-lg font-semibold text-fg mb-2">New Game?</h3>
+            <p className="text-sm text-fg-muted mb-6">Current game progress will be lost.</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirmReset(false)}
-                className="flex-1 py-3 rounded-xl bg-slate-700 text-white font-medium active:bg-slate-600 transition-colors"
+                className="flex-1 py-3 rounded-xl bg-btn text-fg font-medium active:bg-btn-active transition-colors"
               >
                 Cancel
               </button>

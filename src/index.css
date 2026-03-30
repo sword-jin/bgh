@@ -1,9 +1,63 @@
 @import "tailwindcss";
 
+:root {
+  --c-page: #f1f5f9;
+  --c-surface: #ffffff;
+  --c-surface-light: #f8fafc;
+  --c-surface-dark: #e2e8f0;
+  --c-input: #f1f5f9;
+  --c-chip: #e2e8f0;
+  --c-btn: #e2e8f0;
+  --c-btn-active: #cbd5e1;
+  --c-header: rgba(241, 245, 249, 0.85);
+  --c-bar: rgba(241, 245, 249, 0.9);
+  --c-handle: #cbd5e1;
+  --c-overlay: rgba(0, 0, 0, 0.3);
+  --c-fg: #0f172a;
+  --c-fg-secondary: #334155;
+  --c-fg-muted: #64748b;
+  --c-fg-dim: #94a3b8;
+  --c-border: #e2e8f0;
+}
+
+.dark {
+  --c-page: #0f172a;
+  --c-surface: #1e293b;
+  --c-surface-light: #334155;
+  --c-surface-dark: #0f172a;
+  --c-input: #1e293b;
+  --c-chip: #1e293b;
+  --c-btn: #334155;
+  --c-btn-active: #475569;
+  --c-header: rgba(15, 23, 42, 0.85);
+  --c-bar: rgba(15, 23, 42, 0.9);
+  --c-handle: #475569;
+  --c-overlay: rgba(0, 0, 0, 0.5);
+  --c-fg: #f8fafc;
+  --c-fg-secondary: #cbd5e1;
+  --c-fg-muted: #94a3b8;
+  --c-fg-dim: #64748b;
+  --c-border: #1e293b;
+}
+
 @theme {
-  --color-surface: #1e293b;
-  --color-surface-light: #334155;
-  --color-surface-dark: #0f172a;
+  --color-page: var(--c-page);
+  --color-surface: var(--c-surface);
+  --color-surface-light: var(--c-surface-light);
+  --color-surface-dark: var(--c-surface-dark);
+  --color-input: var(--c-input);
+  --color-chip: var(--c-chip);
+  --color-btn: var(--c-btn);
+  --color-btn-active: var(--c-btn-active);
+  --color-header: var(--c-header);
+  --color-bar: var(--c-bar);
+  --color-handle: var(--c-handle);
+  --color-overlay: var(--c-overlay);
+  --color-fg: var(--c-fg);
+  --color-fg-secondary: var(--c-fg-secondary);
+  --color-fg-muted: var(--c-fg-muted);
+  --color-fg-dim: var(--c-fg-dim);
+  --color-border: var(--c-border);
 }
 
 html {
@@ -14,6 +68,8 @@ body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   min-height: 100dvh;
+  background-color: var(--c-page);
+  color: var(--c-fg);
 }
 
 input[type="number"]::-webkit-inner-spin-button,
