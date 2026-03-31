@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Player } from '../types/game'
 
 interface Props {
@@ -14,7 +14,6 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
     players.map((_, i) => initialScores ? String(initialScores[i] ?? 0) : '')
   )
   const sheetRef = useRef<HTMLDivElement>(null)
-  const touchStartY = useRef(0)
 
   useEffect(() => {
     // Prevent body scroll when sheet is open
@@ -40,38 +39,33 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
     }))
   }
 
-  // Swipe down to dismiss
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY
-  }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const delta = e.changedTouches[0].clientY - touchStartY.current
-    if (delta > 80) onClose()
-  }
-
   return (
     <div className="fixed inset-0 z-40 flex flex-col justify-end bg-overlay backdrop-blur-sm">
-      {/* Backdrop tap to close */}
-      <div className="flex-1" onClick={onClose} />
+      {/* Backdrop */}
+      <div className="flex-1" />
 
       {/* Sheet */}
       <div
         ref={sheetRef}
         className="bg-page rounded-t-3xl max-h-[85dvh] flex flex-col border-t border-border"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
       >
-        {/* Handle */}
-        <div className="flex justify-center py-3">
-          <div className="w-10 h-1 rounded-full bg-handle" />
-        </div>
-
-        {/* Title */}
-        <div className="px-5 pb-3">
-          <h2 className="text-xl font-semibold text-fg">
-            {initialScores ? `Edit Round ${roundNumber}` : `Round ${roundNumber}`}
-          </h2>
-          <p className="text-sm text-fg-muted mt-0.5">Enter each player's points</p>
+        {/* Title + Close */}
+        <div className="flex items-start justify-between px-5 pt-5 pb-3">
+          <div>
+            <h2 className="text-xl font-semibold text-fg">
+              {initialScores ? `Edit Round ${roundNumber}` : `Round ${roundNumber}`}
+            </h2>
+            <p className="text-sm text-fg-muted mt-0.5">Enter each player's points</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 -mr-1.5 text-fg-muted active:text-fg transition-colors"
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Player Inputs */}
