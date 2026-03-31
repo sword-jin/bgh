@@ -16,7 +16,6 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
   const gameOver = isGameOver(gameState)
 
   const winner = gameOver ? players[rankings[0]] : null
-  const runnerUp = gameOver && rankings.length > 1 ? players[rankings[1]] : null
 
   // FLIP animation for reordering
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map())
@@ -60,12 +59,6 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
           <div className="text-xs uppercase tracking-wider text-amber-400/70 font-medium mb-1">Winner</div>
           <div className="text-2xl font-bold text-fg mb-0.5">{winner.name}</div>
           <div className="text-amber-400 font-semibold text-lg">{getTotalScore(gameState, rankings[0])} pts</div>
-          {runnerUp && (
-            <div className="mt-3 pt-3 border-t border-amber-500/20 text-sm text-fg-muted">
-              Runner-up: <span className="text-fg font-medium">{runnerUp.name}</span>
-              <span className="text-fg-dim ml-1">({getTotalScore(gameState, rankings[1])} pts)</span>
-            </div>
-          )}
         </div>
       )}
 

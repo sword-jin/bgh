@@ -1,18 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Player } from '../types/game'
 
 interface Props {
   players: Player[]
   roundNumber: number
-  initialScores?: number[]
+  scores: string[]
+  onScoresChange: (scores: string[]) => void
+  isEditing: boolean
   onSubmit: (scores: number[]) => void
   onClose: () => void
 }
 
-export default function ScoreInput({ players, roundNumber, initialScores, onSubmit, onClose }: Props) {
-  const [scores, setScores] = useState<string[]>(
-    players.map((_, i) => initialScores ? String(initialScores[i] ?? 0) : '')
-  )
+export default function ScoreInput({ players, roundNumber, scores, onScoresChange, isEditing, onSubmit, onClose }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,11 +23,9 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
   const handleScoreChange = (index: number, value: string) => {
     // Allow negative numbers and empty string
     if (value === '' || value === '-' || /^-?\d+$/.test(value)) {
-      setScores(prev => {
-        const next = [...prev]
-        next[index] = value
-        return next
-      })
+      const next = [...scores]
+      next[index] = value
+      onScoresChange(next)
     }
   }
 
@@ -53,7 +50,7 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
         <div className="flex items-start justify-between px-5 pt-5 pb-3">
           <div>
             <h2 className="text-xl font-semibold text-fg">
-              {initialScores ? `Edit Round ${roundNumber}` : `Round ${roundNumber}`}
+              {isEditing ? `Edit Round ${roundNumber}` : `Round ${roundNumber}`}
             </h2>
             <p className="text-sm text-fg-muted mt-0.5">Enter each player's points</p>
           </div>
@@ -96,7 +93,7 @@ export default function ScoreInput({ players, roundNumber, initialScores, onSubm
             onClick={handleSubmit}
             className="w-full py-4 rounded-2xl bg-blue-500 text-white font-semibold text-lg active:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
           >
-            {initialScores ? 'Update Scores' : 'Save Scores'}
+            {isEditing ? 'Update Scores' : 'Save Scores'}
           </button>
         </div>
       </div>

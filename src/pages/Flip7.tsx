@@ -12,6 +12,7 @@ export default function Flip7Game() {
   const [gameState, setGameState] = useState<GameState>({ players: [], rounds: [] })
   const [showScoreInput, setShowScoreInput] = useState(false)
   const [editingRound, setEditingRound] = useState<number | null>(null)
+  const [draftScores, setDraftScores] = useState<string[]>([])
   const [showConfirmReset, setShowConfirmReset] = useState(false)
 
   const handleStartGame = useCallback((playerCount: number, names: Record<number, string>) => {
@@ -20,6 +21,7 @@ export default function Flip7Game() {
       if (names[p.id]) p.name = names[p.id]
     })
     setGameState({ players, rounds: [] })
+    setDraftScores(players.map(() => ''))
     setScreen('game')
     setShowScoreInput(true)
   }, [])
@@ -34,9 +36,10 @@ export default function Flip7Game() {
       }
       return { ...prev, rounds: newRounds }
     })
+    setDraftScores(gameState.players.map(() => ''))
     setShowScoreInput(false)
     setEditingRound(null)
-  }, [editingRound])
+  }, [editingRound, gameState.players])
 
   const handleNewRound = useCallback(() => {
     setEditingRound(null)
@@ -45,8 +48,9 @@ export default function Flip7Game() {
 
   const handleEditRound = useCallback((roundIndex: number) => {
     setEditingRound(roundIndex)
+    setDraftScores(gameState.rounds[roundIndex].map(String))
     setShowScoreInput(true)
-  }, [])
+  }, [gameState.rounds])
 
   const handleNewGame = useCallback(() => {
     setShowConfirmReset(true)
@@ -101,7 +105,9 @@ export default function Flip7Game() {
         <ScoreInput
           players={gameState.players}
           roundNumber={editingRound !== null ? editingRound + 1 : gameState.rounds.length + 1}
-          initialScores={editingRound !== null ? gameState.rounds[editingRound] : undefined}
+          scores={draftScores}
+          onScoresChange={setDraftScores}
+          isEditing={editingRound !== null}
           onSubmit={handleSubmitScores}
           onClose={() => { setShowScoreInput(false); setEditingRound(null) }}
         />
