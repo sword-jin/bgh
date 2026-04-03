@@ -17,12 +17,15 @@ export default function App() {
   }, [])
 
   const page = (() => {
-    switch (route) {
-      case '/flip7':
-        return <Flip7Game />
-      default:
-        return <Home />
+    if (route === '/flip7') {
+      return <Flip7Game />
     }
+    if (route.startsWith('/flip7/share')) {
+      const params = new URLSearchParams(route.split('?')[1] || '')
+      const shareData = params.get('d')
+      return <Flip7Game shareData={shareData} />
+    }
+    return <Home />
   })()
 
   return (

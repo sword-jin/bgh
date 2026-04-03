@@ -1,13 +1,55 @@
 import { useState, useCallback } from 'react'
 import type { GameState } from '../types/game'
-import { createPlayers, getTotalScore, getRankings } from '../types/game'
+import { createPlayers, getTotalScore, getRankings, decodeGameState } from '../types/game'
 import PlayerSetup from '../components/PlayerSetup'
 import Scoreboard from '../components/Scoreboard'
 import ScoreInput from '../components/ScoreInput'
 
 type Screen = 'setup' | 'game'
 
-export default function Flip7Game() {
+export default function Flip7Game({ shareData }: { shareData?: string | null }) {
+  // Share mode: decode state from URL, render read-only
+  if (shareData) {
+    const decoded = decodeGameState(shareData)
+    if (!decoded) {
+      return (
+        <div className="min-h-dvh bg-page flex flex-col items-center justify-center px-6">
+          <div className="text-4xl mb-4">😕</div>
+          <h2 className="text-lg font-semibold text-fg mb-2">Invalid Share Link</h2>
+          <p className="text-sm text-fg-muted mb-6 text-center">This shared game link appears to be broken or expired.</p>
+          <a href="#/" className="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium active:bg-blue-600 transition-colors">
+            Go Home
+          </a>
+        </div>
+      )
+    }
+    const rankings = getRankings(decoded)
+    const topScore = decoded.players.length > 0 ? getTotalScore(decoded, rankings[0]) : 0
+    return (
+      <div className="min-h-dvh bg-page flex flex-col">
+        <header className="flex items-center gap-3 px-4 py-3 bg-header backdrop-blur-sm sticky top-0 z-30 border-b border-border">
+          <a href="#/flip7" className="text-fg-muted p-1 -ml-1 active:text-fg transition-colors">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </a>
+          <h1 className="text-lg font-semibold text-fg">Flip 7</h1>
+          <a href="#/flip7" className="ml-auto text-sm text-blue-400 px-3 py-1.5">
+            Play Your Own
+          </a>
+        </header>
+        <Scoreboard
+          gameState={decoded}
+          rankings={rankings}
+          topScore={topScore}
+          onNewRound={() => {}}
+          onEditRound={() => {}}
+          onNewGame={() => {}}
+        />
+      </div>
+    )
+  }
+
   const [screen, setScreen] = useState<Screen>('setup')
   const [gameState, setGameState] = useState<GameState>({ players: [], rounds: [] })
   const [showScoreInput, setShowScoreInput] = useState(false)

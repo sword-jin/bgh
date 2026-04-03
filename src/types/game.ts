@@ -48,3 +48,36 @@ export function getRankings(state: GameState): number[] {
   indices.sort((a, b) => totals[b] - totals[a])
   return indices
 }
+
+export function encodeGameState(state: GameState): string {
+  const names = state.players.map(p => p.name).join(',')
+  const colors = state.players.map(p => PLAYER_COLORS.indexOf(p.color)).join(',')
+  const rounds = state.rounds.map(r => r.join(',')).join(';')
+  const raw = `${names}|${colors}|${rounds}`
+  return btoa(raw)
+}
+
+export function decodeGameState(encoded: string): GameState | null {
+  try {
+    const raw = atob(encoded)
+    const [namesStr, colorsStr, roundsStr] = raw.split('|')
+    if (!namesStr || !colorsStr) return null
+
+    const names = namesStr.split(',')
+    const colorIndices = colorsStr.split(',').map(Number)
+
+    const players: Player[] = names.map((name, i) => ({
+      id: i,
+      name,
+      color: PLAYER_COLORS[colorIndices[i]] || PLAYER_COLORS[0],
+    }))
+
+    const rounds: number[][] = roundsStr
+      ? roundsStr.split(';').map(r => r.split(',').map(Number))
+      : []
+
+    return { players, rounds }
+  } catch {
+    return null
+  }
+}

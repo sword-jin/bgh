@@ -1,6 +1,6 @@
 import { useRef, useLayoutEffect } from 'react'
 import type { GameState } from '../types/game'
-import { getTotalScore, isGameOver, WIN_THRESHOLD } from '../types/game'
+import { getTotalScore, isGameOver, WIN_THRESHOLD, encodeGameState } from '../types/game'
 
 interface Props {
   gameState: GameState
@@ -16,6 +16,12 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
   const gameOver = isGameOver(gameState)
 
   const winner = gameOver ? players[rankings[0]] : null
+
+  const handleShare = () => {
+    const encoded = encodeGameState(gameState)
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/flip7/share?d=${encoded}`
+    window.location.href = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(shareUrl)}`
+  }
 
   // FLIP animation for reordering
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map())
@@ -151,12 +157,20 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
           )}
         </div>
         {gameOver ? (
-          <button
-            onClick={onNewGame}
-            className="w-full py-4 rounded-2xl bg-amber-500 text-white font-semibold text-lg active:bg-amber-600 transition-colors shadow-lg shadow-amber-500/25"
-          >
-            New Game
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={onNewGame}
+              className="flex-1 py-4 rounded-2xl bg-amber-500 text-white font-semibold text-lg active:bg-amber-600 transition-colors shadow-lg shadow-amber-500/25"
+            >
+              New Game
+            </button>
+            <button
+              onClick={handleShare}
+              className="flex-1 py-4 rounded-2xl bg-blue-500 text-white font-semibold text-lg active:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
+            >
+              Share
+            </button>
+          </div>
         ) : (
           <button
             onClick={onNewRound}
