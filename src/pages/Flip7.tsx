@@ -42,9 +42,6 @@ export default function Flip7Game({ shareData }: { shareData?: string | null }) 
           gameState={decoded}
           rankings={rankings}
           topScore={topScore}
-          onNewRound={() => {}}
-          onEditRound={() => {}}
-          onNewGame={() => {}}
         />
       </div>
     )
