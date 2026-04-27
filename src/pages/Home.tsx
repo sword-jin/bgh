@@ -15,7 +15,7 @@ export default function Home() {
             </div>
             <div className="text-left">
               <h2 className="text-lg font-semibold text-fg">Flip 7</h2>
-              <p className="text-sm text-fg-muted">Card game score tracker</p>
+              <p className="text-sm text-fg-muted">First to 200 wins</p>
             </div>
             <svg className="w-5 h-5 text-fg-dim ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

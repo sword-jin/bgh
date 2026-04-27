@@ -6,9 +6,9 @@ interface Props {
   gameState: GameState
   rankings: number[]
   topScore: number
-  onNewRound: () => void
-  onEditRound: (roundIndex: number) => void
-  onNewGame: () => void
+  onNewRound?: () => void
+  onEditRound?: (roundIndex: number) => void
+  onNewGame?: () => void
 }
 
 export default function Scoreboard({ gameState, rankings, topScore, onNewRound, onEditRound, onNewGame }: Props) {
@@ -132,13 +132,22 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
           <h3 className="text-xs font-medium text-fg-dim uppercase tracking-wider mb-2">Rounds</h3>
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
             {rounds.map((_, ri) => (
-              <button
-                key={ri}
-                onClick={() => onEditRound(ri)}
-                className="shrink-0 px-3 py-1.5 rounded-lg bg-chip text-sm text-fg-muted active:bg-btn-active transition-colors"
-              >
-                R{ri + 1}
-              </button>
+              onEditRound ? (
+                <button
+                  key={ri}
+                  onClick={() => onEditRound(ri)}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-chip text-sm text-fg-muted active:bg-btn-active transition-colors"
+                >
+                  R{ri + 1}
+                </button>
+              ) : (
+                <span
+                  key={ri}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-chip text-sm text-fg-muted"
+                >
+                  R{ri + 1}
+                </span>
+              )
             ))}
           </div>
         </div>
@@ -158,12 +167,14 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
         </div>
         {gameOver ? (
           <div className="flex gap-3">
-            <button
-              onClick={onNewGame}
-              className="flex-1 py-4 rounded-2xl bg-amber-500 text-white font-semibold text-lg active:bg-amber-600 transition-colors shadow-lg shadow-amber-500/25"
-            >
-              New Game
-            </button>
+            {onNewGame && (
+              <button
+                onClick={onNewGame}
+                className="flex-1 py-4 rounded-2xl bg-amber-500 text-white font-semibold text-lg active:bg-amber-600 transition-colors shadow-lg shadow-amber-500/25"
+              >
+                New Game
+              </button>
+            )}
             <button
               onClick={handleShare}
               className="flex-1 py-4 rounded-2xl bg-blue-500 text-white font-semibold text-lg active:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
@@ -171,14 +182,14 @@ export default function Scoreboard({ gameState, rankings, topScore, onNewRound, 
               Share
             </button>
           </div>
-        ) : (
+        ) : onNewRound ? (
           <button
             onClick={onNewRound}
             className="w-full py-4 rounded-2xl bg-blue-500 text-white font-semibold text-lg active:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
           >
             New Round
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   )
